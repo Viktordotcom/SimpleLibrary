@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Library</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <button id="btn-openForm">+NEW BOOK</button>
+    <form class="form"action="">
+        <button id="btn-closeForm">X</button>
+        <input type="text" name="author" id="book-author" placeholder="Book Author:" required>
+        <input type="text" name="title" id="book-title" placeholder="Book Title:" required>
+        <input type="number" name="pages" id="book-pages" placeholder="Number of pages:" required min="0">
+        <label for="check-read">Read?</label>
+        <input type="checkbox" id="check-read">
+        <input type="submit" value="Add book" id="btn-addBook">
+    </form>
+    <div id="container"></div>
+</body>
+<footer>Credits: <a target="_blank"href="https://github.com/Viktordotcom">@Viktordotcom</a></footer>
+</html>
