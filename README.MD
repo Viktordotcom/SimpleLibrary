@@ -1,0 +1,1 @@
+Simple Book Library app with ability to save data localy.
