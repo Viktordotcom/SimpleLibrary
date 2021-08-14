@@ -8,116 +8,123 @@ let newBookTitle = document.getElementById('book-title')
 let newBookPages = document.getElementById('book-pages')
 let newBookRead =  document.getElementById('check-read')
 
-
-
 btnOpenForm.addEventListener('click', bringUpForm);
-btnCloseForm.addEventListener('click', bringUpForm)
+btnCloseForm.addEventListener('click', bringUpForm);
 
 // push User Input entry to myLibrary, display the book and hide the form
- btnAddBook.addEventListener('click', ()=> {
- if(checkForm()==false) {return false}
-    addBooktoLibrary()
-    displayNewBook()
+btnAddBook.addEventListener('click', ()=> {
+    if(checkForm()==false) {return false}
+       library1.addBooktoLibrary()
+        library1.displayNewBook()
+       
+        bringUpForm()
+   
+   });
+
+class Book{
+
+    constructor(author, title, pageNumber, read){
+        this._author = author;
+        this._title = title;
+        this._pageNumber = pageNumber;
+        this._read = read;
+    }
     
-     bringUpForm()
-
-});
-
-let myLibrary = [];
-
-
-function Book(author, title, pageNumber, read){
-this.author = author
-this.title = title
-this.pageNumber = pageNumber
-this.read = read
-};
-
-
-
-function addBooktoLibrary(){
-let filterChecked =''
-if(newBookRead.checked == "true" || newBookRead.checked == true){
-    filterChecked = true
-}
-else if(newBookRead.checked == "false"){
-     filterChecked = false
 }
 
-let book = new Book(`${newBookAuthor.value}`, `${newBookTitle.value}`, `${newBookPages.value}`, `${filterChecked}`)
-myLibrary.push(book)
-localStorage.setItem('library', JSON.stringify(myLibrary))
-console.log(localStorage)
-};
+class Library{
+    myLibrary = [];
+
+    constructor(){
+
+    }
+
+    addBooktoLibrary(){
+        let filterChecked =''
+        if(newBookRead.checked == "true" || newBookRead.checked == true){
+            filterChecked = true
+        }
+        else if(newBookRead.checked == "false"){
+             filterChecked = false
+        }
+        
+        let book = new Book(`${newBookAuthor.value}`, `${newBookTitle.value}`, `${newBookPages.value}`, `${filterChecked}`)
+        myLibrary.push(book)
+        localStorage.setItem('library', JSON.stringify(myLibrary))
+    }
+        // empty the display, for each element inside the myLibrary create Div and couple of elements
+        // use the data attribute witht the current index to connect the array element with the DOM element
+        displayNewBook(){
+        container.innerHTML = '';
+        myLibrary.forEach(book =>{
+        if(book == null){
+            return
+        }
+        let newBookCard = document.createElement('div')
+        let newBookAuthorDisplay = document.createElement('p')
+        let newBookTitleDisplay = document.createElement('p')
+        let newBookPagesDisplay = document.createElement('p')
+        let btnRemoveBook = document.createElement('button')
+        let btnToggleRead = document.createElement('button')
+    
+        newBookCard.setAttribute('data-key', `${container.dataset.index = myLibrary.indexOf(book)}`)
+        newBookAuthorDisplay.textContent = `Author:` +' '+book._author
+        newBookTitleDisplay.textContent = 'Title:'+' ' +book._title
+        newBookPagesDisplay.textContent = 'Page Number:'+ ' ' +book._pageNumber
+       
+        function toggleRead(){
+        if(book._read =="true" || book._read == true){
+        btnToggleRead.textContent = 'Read'
+        btnToggleRead.classList.add('read')
+        localStorage.setItem('library', JSON.stringify(myLibrary))
+       }
+       else if(book._read == "false" || book._read == false){
+        btnToggleRead.textContent = 'Not Read'
+        btnToggleRead.classList.remove('read')
+        localStorage.setItem('library', JSON.stringify(myLibrary))
+       }
+        };
+        toggleRead()
+        btnRemoveBook.setAttribute('class', 'btn-remove');
+       btnRemoveBook.textContent = 'Remove'
+        
+    
+        btnRemoveBook.addEventListener('click', (e)=>{
+            delete myLibrary[e.target.parentElement.dataset.key]
+                  container.removeChild(e.target.parentElement)
+                  localStorage.setItem('library', JSON.stringify(myLibrary))
+        });
+    
+        btnToggleRead.addEventListener('click', (e)=>{
+            
+            myLibrary[e.target.parentElement.dataset.key]._read = !myLibrary[e.target.parentElement.dataset.key]._read 
+            toggleRead()
+        });
+        
+        newBookCard.appendChild(newBookAuthorDisplay)
+        newBookCard.appendChild(newBookTitleDisplay)
+        newBookCard.appendChild(newBookPagesDisplay)
+        newBookCard.appendChild(btnRemoveBook)
+        newBookCard.appendChild(btnToggleRead)
+        container.appendChild(newBookCard)
+    
+     });
+     };
+
+}
+let library1 = new Library()
 
 function bringUpForm(){
-formInput.classList.toggle('visible')
-newBookAuthor.value = '';
-newBookPages.value = '';
-newBookTitle.value = '';
-};
-
-// empty the display, for each element inside the myLibrary create Div and couple of elements
-// use the data attribute witht the current index to connect the array element with the DOM element
-function displayNewBook(){
-    container.innerHTML = '';
-myLibrary.forEach(book =>{
-    if(book == null){
-        return
-    }
-    // previous logic +
-    // + books = container.innerHTML += `<div data-key=${container.dataset.index = myLibrary.indexOf(book)}>` + '<p><strong>Book Author: </strong>' + book.author + '<p><strong>Book Title: </strong> ' + book.title + '<p><strong> Number of pages: </strong>' + book.pageNumber + '<br>' + '<button class=btn-remove>Remove Book' + '<button class=btn-toggle>Not Read'
-    let newBookCard = document.createElement('div')
-    let newBookAuthorDisplay = document.createElement('p')
-    let newBookTitleDisplay = document.createElement('p')
-    let newBookPagesDisplay = document.createElement('p')
-    let btnRemoveBook = document.createElement('button')
-    let btnToggleRead = document.createElement('button')
-
-    newBookCard.setAttribute('data-key', `${container.dataset.index = myLibrary.indexOf(book)}`)
-    newBookAuthorDisplay.textContent = `Author:` +' '+book.author
-    newBookTitleDisplay.textContent = 'Title:'+' ' +book.title
-    newBookPagesDisplay.textContent = 'Page Number:'+ ' ' +book.pageNumber
-   
-    function toggleRead(){
-    if(book.read =="true" || book.read == true){
-    btnToggleRead.textContent = 'Read'
-    btnToggleRead.classList.add('read')
-    localStorage.setItem('library', JSON.stringify(myLibrary))
-   }
-   else if(book.read == "false" || book.read == false){
-    btnToggleRead.textContent = 'Not Read'
-    btnToggleRead.classList.remove('read')
-    localStorage.setItem('library', JSON.stringify(myLibrary))
-   }
+    formInput.classList.toggle('visible')
+    newBookAuthor.value = '';
+    newBookPages.value = '';
+    newBookTitle.value = '';
     };
-    toggleRead()
-    btnRemoveBook.setAttribute('class', 'btn-remove');
-   btnRemoveBook.textContent = 'Remove'
-    
 
-    btnRemoveBook.addEventListener('click', (e)=>{
-        delete myLibrary[e.target.parentElement.dataset.key]
-              container.removeChild(e.target.parentElement)
-              localStorage.setItem('library', JSON.stringify(myLibrary))
-    });
 
-    btnToggleRead.addEventListener('click', (e)=>{
-        
-        myLibrary[e.target.parentElement.dataset.key].read = !myLibrary[e.target.parentElement.dataset.key].read 
-        toggleRead()
-    });
-    
-    newBookCard.appendChild(newBookAuthorDisplay)
-    newBookCard.appendChild(newBookTitleDisplay)
-    newBookCard.appendChild(newBookPagesDisplay)
-    newBookCard.appendChild(btnRemoveBook)
-    newBookCard.appendChild(btnToggleRead)
-    container.appendChild(newBookCard)
 
- });
- };
-function checkForm(){
+
+ function checkForm(){
     if(newBookAuthor.value == ''){
         return false
     }
@@ -129,35 +136,35 @@ function checkForm(){
     }
 }
 
-if(localStorage.getItem('library') === null){
-    myLibrary = [
-        { 
-        author: 'Viktor Frankl',
-        title:'Man\'s Search for Meaning',
-        pageNumber: '200',
-        read: true,
-
-    }, 
-    {
-        author: 'Ryan Holiday',
-        title:'The Obstacle Is the Way',
-        pageNumber: '224',
-        read:false,
-
-    },
-    {
-        author: 'V.Anton Spraul',
-        title: 'Think Like a Programmer',
-        pageNumber: '256',
-        read: false,
-
-    }
-    ];
-    displayNewBook()
-}
-else {
+    if(localStorage.getItem('library') === null){
+        myLibrary = [
+            { 
+            _author: 'Viktor Frankl',
+            _title:'Man\'s Search for Meaning',
+            _pageNumber: '200',
+            _read: true,
     
-   let library = JSON.parse(localStorage.getItem('library'))
-    myLibrary = library;
-    displayNewBook()
-}
+        }, 
+        {
+            _author: 'Ryan Holiday',
+            _title:'The Obstacle Is the Way',
+            _pageNumber: '224',
+            _read:false,
+    
+        },
+        {
+            _author: 'V.Anton Spraul',
+            _title: 'Think Like a Programmer',
+            _pageNumber: '256',
+            _read: false,
+    
+        }
+        ];
+        library1.displayNewBook()
+    }
+    else {
+        
+       let library = JSON.parse(localStorage.getItem('library'))
+        myLibrary = library;
+        library1.displayNewBook()
+    }
