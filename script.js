@@ -131,7 +131,7 @@ function bringUpForm(){
     else if(newBookTitle.value == '') {
         return false
     }
-    else if(newBookPages.value == ''){
+    else if(newBookPages.validity.valid == false){
         return false
     }
 }

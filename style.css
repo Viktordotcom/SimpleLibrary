@@ -66,10 +66,17 @@ button:hover{
     transition: all 1s ease-out;
 }
 
+.form.visible input:invalid{
+    border: 1px solid red;
+}
+#check-read{
+    accent-color: green;
+}
 button{
    background-color:  rosybrown;
    border: 1px solid #24272b;
    margin: 5px;
+
 
 }
 .read:hover{
